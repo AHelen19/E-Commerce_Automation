@@ -68,7 +68,10 @@ public class BaseTest {
 
 	@BeforeMethod
 	public void initTest(Method method){
-		extentTest = new ExtentTest(method.getName(), "");
+
+		//extentTest = new ExtentTest(method.getName(), "");
+		extentTest =extentReport.startTest(method.getName());
+
 	}
 
 	public ExtentTest getReport(){

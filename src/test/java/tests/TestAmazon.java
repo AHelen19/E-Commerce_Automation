@@ -25,6 +25,7 @@ public class TestAmazon extends BaseTest {
 
 	@BeforeMethod
 	public void launchApp(){
+
 		home.launchApp(baseUrl());
 	}
 
