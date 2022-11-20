@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="testSuite" verbose="1" >
+   <parameter name="browser" value="chrome"></parameter>
+ 
+  <test name="Selenium demo" >
+    <classes>
+       <class name="tests.TestAmazon" />
+    </classes>
+  </test>
+</suite>
