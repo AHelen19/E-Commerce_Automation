@@ -34,15 +34,20 @@ public class TestAmazon extends BaseTest {
 	public void testAmazon() {
 		String aboutItemText;
 		home.clickOnAllLInkHambergerMenu();
-		getReport().log(LogStatus.INFO,"Able to click on All Menu or Hamberger icon");
+		getReport().log(LogStatus.PASS,"Able to click on All Menu or Hamburger icon");
 		home.clickOnTVApplieance();
-		getReport().log(LogStatus.INFO, "Able to click on TV Appliance Menu");
+		getReport().log(LogStatus.PASS, "Able to click on TV Appliance Menu");
 		home.clickOnTelevisions();
-		getReport().log(LogStatus.INFO, "Able to click on Televisions Menu");
+		getReport().log(LogStatus.PASS, "Able to click on Televisions Menu");
 		productsPage.selectBrand();
-		getReport().log(LogStatus.INFO, "Able to select Brand successfully");
+		if (productsPage.isResultsHeadingShown()) {
+			getReport().log(LogStatus.PASS, "Able to select Brand successfully");
+		} else
+			getReport().log(LogStatus.FAIL, "Unable to see the item list page");
 		productsResultsPage.sortProductListByPriceInDescendingOrder();
+		getReport().log(LogStatus.INFO, "Able to sort price by descending order successfully");
 		productsResultsPage.clickOnSecondHighestResult();
+		getReport().log(LogStatus.PASS, "Able to click the second item successfully");
 		aboutItemText = productsResultsPage.switchWindowAndVerifyAboutThisItemSection();
 		if (aboutItemText.equals("")){
 			getReport().log(LogStatus.FAIL, "About Item section is empty");
@@ -51,6 +56,6 @@ public class TestAmazon extends BaseTest {
 		Assert.assertNotEquals(aboutItemText,"","About Item section is empty");
 		getReport().log(LogStatus.PASS, "Able to fetch About Item text successfully");
 		System.out.println(aboutItemText);
-		getReport().log(LogStatus.INFO, aboutItemText);
+		getReport().log(LogStatus.PASS, aboutItemText);
 	}
 }

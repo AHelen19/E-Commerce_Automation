@@ -70,7 +70,7 @@ public class BaseTest {
 	public void initTest(Method method){
 
 		//extentTest = new ExtentTest(method.getName(), "");
-		extentTest =extentReport.startTest(method.getName());
+		extentTest =extentReport.startTest("Amazon Test");
 
 	}
 
@@ -83,7 +83,7 @@ public class BaseTest {
 		extentReport.endTest(extentTest);
 	}
 
-	@AfterClass(alwaysRun = true)
+	//@AfterClass(alwaysRun = true)
 	public void tearDriver() {
 		df.quitDriver();
 		log.info("Quiting the driver");

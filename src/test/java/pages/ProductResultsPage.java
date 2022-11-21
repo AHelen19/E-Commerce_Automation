@@ -19,7 +19,7 @@ public class ProductResultsPage extends BasePage {
     @FindBy(css = "span[class='a-price-whole']")
     List<WebElement> priceList;
 
-    @FindBy(xpath="//h1[contains(text(),'About this item')]")
+    @FindBy(xpath = "//h1[contains(text(),'About this item')]")
     WebElement aboutThisItem;
 
     public ProductResultsPage(WebDriver driver) {
@@ -27,7 +27,12 @@ public class ProductResultsPage extends BasePage {
     }
 
     public void sortProductListByPriceInDescendingOrder() {
-        selectSortByPrice.click();
+
+        try {
+            waitForElement(10,selectSortByPrice).click();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Select sortByPriceSelect = new Select(selectSortByPrice);
         sortByPriceSelect.selectByValue("price-desc-rank");
     }
@@ -38,6 +43,7 @@ public class ProductResultsPage extends BasePage {
 
     public String switchWindowAndVerifyAboutThisItemSection() {
         String parent = driver.getWindowHandle();
+        String itemDescription = "";
         Set<String> s = driver.getWindowHandles();
         // Now iterate using Iterator
         Iterator<String> I1 = s.iterator();
@@ -46,10 +52,11 @@ public class ProductResultsPage extends BasePage {
             if (!parent.equals(child_window)) {
                 driver.switchTo().window(child_window);
                 if (aboutThisItem.isDisplayed()) {
-                   return aboutThisItem.getText();
+                    itemDescription = aboutThisItem.getText();
                 }
             }
         }
-        return "";
+        driver.switchTo().window(parent);
+        return itemDescription;
     }
 }

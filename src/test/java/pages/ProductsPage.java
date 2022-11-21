@@ -6,8 +6,10 @@ import org.openqa.selenium.support.FindBy;
 
 public class ProductsPage extends BasePage{
 
-    @FindBy(xpath = "//span[text()='Samsung']/parent::a//input")
+    @FindBy(xpath = "//span[text()='Samsung']")
     WebElement sumSungBrand;
+    @FindBy(xpath = "//span[contains(text(),'RESULT')]")
+    WebElement resultsHeading;
 
     public ProductsPage(WebDriver driver) {
         super(driver);
@@ -20,5 +22,15 @@ public class ProductsPage extends BasePage{
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isResultsHeadingShown() {
+
+         try {
+           return waitForElement(10, resultsHeading).isDisplayed();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+         return false;
     }
 }
