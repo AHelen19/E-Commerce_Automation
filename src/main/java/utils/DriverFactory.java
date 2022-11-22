@@ -1,19 +1,26 @@
 package utils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class DriverFactory {
 
 	private WebDriver driver = null;
 
 	public WebDriver getDriver(String browser) {
-
+		DesiredCapabilities capabilities = new DesiredCapabilities();
+		String hubUrl = "http://10.21.19.177:4444/wd/hub";
 		if (browser.equalsIgnoreCase("chrome")) {
 			// It will launch the Chrome browser in the automation script
 			// webdrivermanager checks for the latest version of the specified WebDriver
@@ -21,7 +28,16 @@ public class DriverFactory {
 			// If the binaries are not present on the machine, then it will download the
 			// WebDriver binaries.
 			WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver();
+			capabilities.setBrowserName("chrome");
+			capabilities.setPlatform(Platform.ANY);
+			ChromeOptions options = new ChromeOptions();
+			options.merge(capabilities);
+			//driver = new ChromeDriver();
+			try {
+				driver = new RemoteWebDriver(new URL(hubUrl),options);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
 		} else if (browser.equalsIgnoreCase("firefox")) {
 			// Setting up the firefox browser for automation
 			WebDriverManager.firefoxdriver().setup();
