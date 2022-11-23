@@ -1,0 +1,67 @@
+version: "3.8"
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "80:8080"
+      - "443:8443"  #tcp port mapping
+      - "50000:50000" # api port mapping
+    volumes:
+      - 'C:\Users\souvi\Docker_Volume\jenkins-data:/var/jenkins_home'
+
+  selenium-hub:
+    restart: always
+    image: selenium/hub:4.1.1-20211217
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+
+  #selenium-chrome
+  selenium-chrome:
+    image: selenium/node-chrome:4.1.1-20211217
+    shm_size: 2gb
+    ports:
+      - "5900"
+      - "7900"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - selenium-hub
+
+  #selenium-firefox
+  selenium-firefox:
+    image: selenium/node-firefox:4.1.1-20211217
+    shm_size: 2gb
+    ports:
+      - "5900"
+      - "7900"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - selenium-hub
+
+  #selenium-edge
+  selenium-edge:
+    image: selenium/node-edge:4.1.1-20211217
+    shm_size: 2gb
+    ports:
+      - "5900"
+      - "7900"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    depends_on:
+      - selenium-hub
+
+volumes:
+  jenkins_data:
+

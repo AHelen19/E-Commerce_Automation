@@ -4,12 +4,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-public class FileConfig {
+public class TestConfig {
 
     private static Properties prop;
     private static FileInputStream fs;
+    private static String browser = System.getenv("browser");
+    private static String env = System.getenv("env");
+    private static Properties properties;
 
-    public static void loadConfig(String env) {
+     public static String getBrowser(){
+        return browser;
+    }
+
+    public static String getEnv(){
+        return env;
+    }
+
+    public static void loadConfig() {
         String fileInfo = "";
         //check the operating system of the user and based on that try to locate the properties files
         if (System.getProperty("os.name").toLowerCase().contains("win")
@@ -19,8 +30,6 @@ public class FileConfig {
                     + File.separator + "src" + File.separator + "test" + File.separator +
                     "resources" + File.separator + "property" + File.separator + "configuration.properties";
         }
-
-
         try {
             //Creating object of file input stream
             fs = new FileInputStream(new File(fileInfo));

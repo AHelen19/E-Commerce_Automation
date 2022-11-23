@@ -11,7 +11,7 @@ import pages.ProductResultsPage;
 import pages.ProductsPage;
 
 
-public class TestAmazon extends BaseTest {
+public class TestAmazon extends TestBase {
 	HomePage home;
 	ProductsPage productsPage;
 	ProductResultsPage productsResultsPage;

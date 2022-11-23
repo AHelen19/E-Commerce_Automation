@@ -9,42 +9,47 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 
 import utils.DriverFactory;
-import utils.FileConfig;
+import utils.TestConfig;
 
 import java.lang.reflect.Method;
 
-public class BaseTest {
-	Logger log = LogManager.getLogger(BaseTest.class.getName());
+public class TestBase {
+	Logger log = LogManager.getLogger(TestBase.class.getName());
 
 	private WebDriver driver;
-	private DriverFactory df;
+	private DriverFactory driverFactory;
 	private String baseUrl;
 	ExtentReports extentReport;
 	ExtentTest extentTest;
 
 	@BeforeSuite
 	public void initSuite() {
-       FileConfig.loadConfig("dev");
+       TestConfig.loadConfig();
 		log.info("loading configuration file that is setup for dev environment");
-		baseUrl = FileConfig.getProperty("baseUrl");
+		baseUrl = TestConfig.getProperty("baseUrl");
 		extentReport = new ExtentReports("./TestReport.html",true);
 	}
 
-	/*
-	 * initialize the driver factory and get driver based on the browser given here
+	/**
+	 * initialize the driver factory and get driver based on the runtType and
 	 *
-	 * @param browser
+	 * @param browser - browser type
 	 */
 	@Parameters("browser")
 	@BeforeClass(alwaysRun = true)
 	public void initDriver(String browser) {
-		df = new DriverFactory();
+		driverFactory = new DriverFactory();
 		log.info("Creating driver factory object");
-		// pass browser as system environment variable while invoking the test
-		// driver = df.getDriver(System.getenv("browser"));
 		log.info("extracting browser from environment variable");
-		driver = df.getDriver(browser);
-		log.info("getting driver based on the the browser type");
+		if(System.getenv("runtype").equals("local")){
+			driver = driverFactory.getDriver(browser);
+		}else if(System.getenv("runtype").equals("remote")){
+			driver = driverFactory.getRemoteWebDriver(browser);
+		}else if(System.getenv("runtype").equals("docker")){
+			driver = driverFactory.getRemoteWebDriverDocker(System.getenv("hub"));
+		}
+
+		log.info("getting driver based on the the run type");
 
 		if (driver == null) {
 			log.error("driver is not initialized");
@@ -83,9 +88,9 @@ public class BaseTest {
 		extentReport.endTest(extentTest);
 	}
 
-	//@AfterClass(alwaysRun = true)
+	@AfterClass(alwaysRun = true)
 	public void tearDriver() {
-		df.quitDriver();
+		driverFactory.quitDriver();
 		log.info("Quiting the driver");
 	}
 
